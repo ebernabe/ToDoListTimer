@@ -1,0 +1,31 @@
+{
+  "name": "ToDo",
+  "version": "0.0.0",
+  "dependencies": {
+    "angular": "~1.4.1"
+  },
+  "devDependencies": {
+    "http-server": "~0.8.0",
+    "browserify": "~10.2.4",
+    "babelify": "~6.1.2",
+    "gulp-stylus": "~2.0.5",
+    "gulp-uglify": "~1.2.0",
+    "vinyl-buffer": "~1.0.0",
+    "vinyl-source-stream": "~1.1.0",
+    "jade": "~1.11.0",
+    "jadeify": "~4.3.0",
+    "gulp": "~3.9.0",
+    "gulp-concat-css": "~2.2.0",
+    "gulp-minify-css": "~1.1.6",
+    "stylus": "~0.51.1",
+    "nib": "~1.1.0",
+    "gulp-jade": "~1.0.1",
+    "grunt": "~0.4.5",
+    "grunt-contrib-jshint": "~0.11.2",
+    "grunt-open": "~0.2.3",
+    "grunt-contrib-watch": "~0.6.1",
+    "matchdep": "~0.3.0",
+    "grunt-express": "~1.4.1"
+  },
+  "author": "Ernesto Bernabe Solis"
+}
