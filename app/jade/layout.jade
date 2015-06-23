@@ -1,5 +1,5 @@
 doctype
-html.no-js
+html.no-js(ng-app="ToDoApp")
     head
         meta(charset='utf-8')
         meta(http-equiv='X-UA-Compatible', content='IE=edge')
@@ -8,14 +8,14 @@ html.no-js
         meta(name='description', content='')
         meta(name='viewport', content='width=device-width, initial-scale=1')
         link(rel='stylesheet', href='css/main.css') 
-    body
+        
+    body(ng-controller="AppController")
         section.todoapp
             block titleh1
                 h1 default title
             block content
                 
         script(src='js/app.js') 
-
         //- Google Analytics: change UA-XXXXX-X to be your site's ID.
         //-
             script

@@ -1,10 +1,21 @@
 extends ./layout.jade
 
 block titlemeta
-	ToDo
+	title ToDo
 block titleh1
 	h1 ToDo
 block content
-	article.mainApp
-		p se escribe bien
+	section
+		article.current(ng-repeat="t in currentt")
+			p {{t.id}} - {{t.val.name}} -
+				span {{t.val.date|date:"medium"}} 
 
+
+	section.addtodo
+		form(ng-submit="addtodo()")
+			input(type="text",ng-model="todotext" ,placeholder="add new todo here")
+			input(class="btn-primary",type="submit",value="add")
+	article.task(ng-repeat="t in tasks")
+		p {{t.id}} - {{t.val.name}} -
+			span {{t.val.date|date:"medium"}} 
+			button(id="x{{t.id}}", ng-Click="starttask()") Start Task
