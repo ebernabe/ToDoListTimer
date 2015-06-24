@@ -6,16 +6,21 @@ block titleh1
 	h1 ToDo
 block content
 	section
-		article.current(ng-repeat="t in currentt")
+		article.todo-current(ng-repeat="t in tdc.currentt")
 			p {{t.id}} - {{t.val.name}} -
 				span {{t.val.date|date:"medium"}} 
 
-
-	section.addtodo
-		form(ng-submit="addtodo()")
-			input(type="text",ng-model="todotext" ,placeholder="add new todo here")
+	section.todo-addtodo
+		form(ng-submit="tdc.addtodo()")
+			input(type="text",ng-model="tdc.todo.name" ,placeholder="add new todo here")
 			input(class="btn-primary",type="submit",value="add")
-	article.task(ng-repeat="t in tasks")
-		p {{t.id}} - {{t.val.name}} -
-			span {{t.val.date|date:"medium"}} 
-			button(id="x{{t.id}}", ng-Click="starttask()") Start Task
+
+	div.todo-notice(ng-if="tdc.todo.name") Remember to do "{{tdc.todo.name}}" and track the time
+
+	article.todo-tasks(ng-repeat="t in tdc.tasks")
+		p 
+			form(ng-submit="tdc.starttask()")
+				input(type="hidden",value="{{t.id}}",name="x{{t.id}}") 
+				{{t.val.name}} -
+				span {{t.val.date|date:"medium"}} 
+				input(class="todo-start",type="submit",value="Start Task")

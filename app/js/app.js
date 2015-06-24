@@ -1,26 +1,23 @@
 'use strict'
 var angular = require("angular");
 module.exports = angular.module("ToDoApp",[])
-.controller("AppController",["$scope",function ($scope) {
-    $scope.tasks = [];
-    $scope.currentt = [];
+.controller("ToDoController",function () {
+    this.tasks = [];
+    this.currentt = [];
+    this.todo = [];
 
-
-    $scope.addtodo = function(){
-    	var d = dnow();
-    	$scope.s = String(d);
-    	$scope.tasks.push({id:$scope.s,val:{name: $scope.todotext, date:new Date()}});
-    	
-    	$scope.todotext = "";
-    	  
+    this.addtodo = function(){
+    	var s = String(dnow()); 
+    	this.tasks.push({id:s,val:{name: this.todo.name, date:new Date()}});
+    	this.todo.name = "";
     };   
-    $scope.starttask = function(){
+    this.starttask = function(){
     	
-   		console.log($scope.tasks[this.t.id])
+   		console.log(this.tasks)
 
     };
 
-  }]);
+  });
 
 
 function dnow() {
