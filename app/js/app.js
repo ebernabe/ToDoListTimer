@@ -8,12 +8,12 @@ module.exports = angular.module("ToDoApp",[])
 
     this.addtodo = function(){
     	var s = String(dnow()); 
-    	this.tasks.push({id:s,val:{name: this.todo.name, date:new Date()}});
+    	this.tasks.push({id:s,name: this.todo.name, date:new Date()});
     	this.todo.name = "";
     };   
-    this.starttask = function(){
-    	
-   		console.log(this.tasks)
+    this.starttask = function(t){
+    	this.currentt.push(t);
+   		console.log(task);
 
     };
 
