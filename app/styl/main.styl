@@ -1,1 +1,53 @@
-@import normalize
+@import "normalize"
+@import "foundation"
+grisclaro = #ccc
+grisoscuro = #666
+
+body
+	color grisoscuro
+h1
+	display none
+.todo
+	&-addtodo
+		display block
+		text-align center
+		line-height 30px
+		font-size 20px
+	&-tasks-section
+		display block
+		width 80%
+		margin 0 auto
+		overflow hidden
+		word-wrap: break-word;
+		text-align left
+	&-tasks
+		width 80%
+		display block
+		margin 0 auto
+		text-align left
+		vertical-align middle
+		padding 5px
+		margin-bottom 5px
+		background-color #F8F8F8 
+		// border-bottom 1px solid grisclaro	
+		div
+			vertical-align middle
+		input
+			vertical-align middle
+	&-option-task
+		font-size 12px
+	&-notice
+		display block
+		text-align center
+		font-size 12px
+		color tomato
+		&:after
+			content " -"
+			font-size 12px
+			display inline
+		&:before
+			content "- "
+			font-size 12px
+			display inline
+		
+		

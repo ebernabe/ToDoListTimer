@@ -5,15 +5,21 @@ module.exports = angular.module("ToDoApp", []).controller("ToDoController", func
   this.tasks = [];
   this.currentt = [];
   this.todo = [];
+  this.clients = [{ id: 1, name: "PCR" }, { id: 2, "name": "Amerisol" }];
 
   this.addtodo = function () {
     var s = String(dnow());
-    this.tasks.push({ id: s, name: this.todo.name, date: new Date() });
-    this.todo.name = "";
+    var namex = this.todo.name;
+    var clientx = this.todo.client;
+    if (namex.length > 0) {
+      this.tasks.push({ id: s, name: namex, date: new Date(), client: clientx });
+      this.todo.name = "";
+      this.todo.client = "";
+    }
   };
   this.starttask = function (t) {
     this.currentt.push(t);
-    console.log(task);
+    console.log(this.tasks);
   };
 });
 

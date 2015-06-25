@@ -5,22 +5,31 @@ block titlemeta
 block titleh1
 	h1 ToDo
 block content
-	section
+	div.todo-addtodo
+		form(ng-submit="tdc.addtodo()")
+			div.row.panel.clearfix
+				div.large-6.medium-6.columns
+					input(type="text",class="left  radius large-6 medium-6 columns",ng-model="tdc.todo.name",placeholder="ToDo")
+				div.large-4.medium-4.columns
+					select(ng-model="tdc.todo.client" ng-options="item.name as item.name for item in tdc.clients")
+						option(value="") Select Client
+				input(class="button right small large-2 medium-2 columns  alert",type="submit",value="Add")
+
+	div.todo-notice(ng-if="tdc.todo.name") Remember to do 
+			span "{{tdc.todo.name}}" 
+			span(ng-if="tdc.todo.client") for {{tdc.todo.client}} 
+			|and track the time
+
+	section.todo-current-section
 		article.todo-current(ng-repeat="t in tdc.currentt")
 			p {{t.id}} - {{t.name}} -
 				span {{t.date|date:"medium"}} 
-
-	section.todo-addtodo
-		form(ng-submit="tdc.addtodo()")
-			input(type="text",ng-model="tdc.todo.name" ,placeholder="add new todo here")
-			input(class="btn-primary",type="submit",value="add")
-
-	div.todo-notice(ng-if="tdc.todo.name") Remember to do "{{tdc.todo.name}}" and track the time
-
-	article.todo-tasks(ng-repeat="t in tdc.tasks")
-		p 
-			form(novalidate)
-				input(type="hidden",value="{{t.id}}",name="x{{t.id}}") 
+	section.todo-tasks-section
+		article.row.todo-tasks(ng-repeat="t in tdc.tasks")
+			div.todo-option-task.large-10.columns
+				|#
+				span.client(ng-if="t.client") {{t.client}} - 
 				{{t.name}} -
 				span {{t.date|date:"medium"}} 
-				input(class="todo-start",type="submit",ng-click="tdc.starttask(t)",value="Start Task")
+			div.large-2.columns
+				input(class="button tiny right ",type="submit",ng-click="tdc.starttask(t)",value="Start Task")

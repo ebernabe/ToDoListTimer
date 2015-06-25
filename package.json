@@ -2,9 +2,7 @@
   "name": "ToDo",
   "version": "0.0.0",
   "dependencies": {
-    "angular": "~1.4.1",
-    "angular-route": "~1.4.1",
-    "angular-router-browserify": "0.0.2"
+    "angular": "~1.4.1"
   },
   "devDependencies": {
     "http-server": "~0.8.0",
