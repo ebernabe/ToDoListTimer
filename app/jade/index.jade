@@ -22,11 +22,15 @@ block content
 
 	section.todo-current-section
 		article.todo-current(ng-repeat="t in tdc.currentt")
-			a.large.button.dropdown.expand(data-dropdown="drop1",aria-controls="drop1",aria-expanded="false") 
-				span.client(ng-if="t.client") {{t.client}} - 
+			button.large.button.split.success.expand() 
+				b.client(ng-if="t.client") {{t.client}} - 
 				|{{t.name}} -
-				span {{t.date|date:"medium"}} 
-			ul(id="drop1",data-dropdown-content,class="f-dropdown",aria-hidden="true",class="f-dropdown")
+				b {{t.date|date:"medium"}} 
+				span(data-dropdown="drop")
+
+			ul(id="drop",class="f-dropdown",data-dropdown-content)
+				li 
+					a(href="#") Desactivar
 				li 
 					a(href="#") Concluido
 				li
