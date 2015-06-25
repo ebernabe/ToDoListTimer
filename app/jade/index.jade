@@ -22,14 +22,23 @@ block content
 
 	section.todo-current-section
 		article.todo-current(ng-repeat="t in tdc.currentt")
-			p {{t.id}} - {{t.name}} -
+			a.large.button.dropdown.expand(data-dropdown="drop1",aria-controls="drop1",aria-expanded="false") 
+				span.client(ng-if="t.client") {{t.client}} - 
+				|{{t.name}} -
 				span {{t.date|date:"medium"}} 
+			ul(id="drop1",data-dropdown-content,class="f-dropdown",aria-hidden="true",class="f-dropdown")
+				li 
+					a(href="#") Concluido
+				li
+					a(href="#") Terminado
+				li
+					a(href="#") Descartado 
 	section.todo-tasks-section
 		article.row.todo-tasks(ng-repeat="t in tdc.tasks")
 			div.todo-option-task.large-10.columns
 				|#
 				span.client(ng-if="t.client") {{t.client}} - 
-				{{t.name}} -
+				|{{t.name}} -
 				span {{t.date|date:"medium"}} 
 			div.large-2.columns
 				input(class="button tiny right ",type="submit",ng-click="tdc.starttask(t)",value="Start Task")

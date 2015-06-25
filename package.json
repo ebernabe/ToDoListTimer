@@ -1,8 +1,24 @@
 {
   "name": "ToDo",
   "version": "0.0.0",
+  "browser": {
+    "jquery": "./node_modules/jquery/dist/jquery.js",
+    "foundation": "./node_modules/foundation-sites/js/foundation.js"
+  },
+  "browserify-shim": {
+    "jquery": "$",
+    "foundation": "foundation"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
   "dependencies": {
-    "angular": "~1.4.1"
+    "angular": "~1.4.1",
+    "jquery": "~2.1.4",
+    "browserify-shim": "~3.8.9",
+    "foundation-sites": "~5.5.2"
   },
   "devDependencies": {
     "http-server": "~0.8.0",

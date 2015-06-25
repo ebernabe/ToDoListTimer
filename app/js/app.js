@@ -1,5 +1,10 @@
 'use strict'
 var angular = require("angular");
+var $ = require('jquery');
+var foundation = require('foundation');
+
+$(document).foundation();
+
 module.exports = angular.module("ToDoApp",[])
 .controller("ToDoController",function () {
     this.tasks = [];
