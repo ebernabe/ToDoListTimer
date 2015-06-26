@@ -22,10 +22,9 @@ block content
 
 	section.todo-current-section
 		article.todo-current(ng-repeat="t in tdc.currentt")
-			button.large.button.split.success.expand() 
+			a.large.button.split.success.expand(ng-click="tdc.stoptask(t)") 
 				b.client(ng-if="t.client") {{t.client}} - 
-				|{{t.name}} -
-				b {{t.date|date:"medium"}} 
+				|{{t.name}}		
 				span(data-dropdown="drop")
 
 			ul(id="drop",class="f-dropdown",data-dropdown-content)
@@ -40,9 +39,8 @@ block content
 	section.todo-tasks-section
 		article.row.todo-tasks(ng-repeat="t in tdc.tasks")
 			div.todo-option-task.large-10.columns
-				|#
 				span.client(ng-if="t.client") {{t.client}} - 
-				|{{t.name}} -
-				span {{t.date|date:"medium"}} 
+				|{{t.name}} 
+				span [{{t.date|date:"medium"}}]
 			div.large-2.columns
 				input(class="button tiny right ",type="submit",ng-click="tdc.starttask(t)",value="Start Task")
