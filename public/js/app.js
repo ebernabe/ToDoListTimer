@@ -3,6 +3,8 @@
 var angular = require('angular');
 
 var $ = require('jquery');
+var timer = require('./timer.js');
+
 var foundation = require('foundation');
 
 $(document).foundation();
@@ -102,9 +104,15 @@ module.exports = angular.module('ToDoApp', []).controller('ToDoController', func
 
     //console.log(this.currentt.indexOf(t));
   };
-
+  this.startwatch = function (timer) {
+    $('#timer' + timer).timer({
+      action: 'start',
+      seconds: 0
+    });
+    // debugger
+  };
   this.stoptask = function (t) {
-    console.log(t);
+
     if (this.currentt.indexOf(t) > -1) {
       this.currentt.splice(this.currentt.indexOf(t), 1);
     } else {
@@ -113,7 +121,86 @@ module.exports = angular.module('ToDoApp', []).controller('ToDoController', func
   };
 });
 
-},{"angular":3,"foundation":4,"jquery":5}],2:[function(require,module,exports){
+},{"./timer.js":2,"angular":4,"foundation":5,"jquery":6}],2:[function(require,module,exports){
+/*! timer.jquery 0.4.1 2015-06-16*/"use strict";
+
+!(function (a) {
+  function b() {
+    p = setInterval(d, v.updateFrequency), t = !0;
+  }function c() {
+    clearInterval(p), t = !1;
+  }function d() {
+    s = g() - q, e(), u && s === u && (v.callback(), v.repeat && (u += v.duration), v.countdown && (v.countdown = !1));
+  }function e() {
+    var a = s;v.countdown && u > 0 && (a = u - s), r[w](i(a)), r.data("seconds", a);
+  }function f() {
+    r.on("focus", function () {
+      l();
+    }), r.on("blur", function () {
+      var a,
+          b = r[w]();b.indexOf("sec") > 0 ? s = Number(b.replace(/\ssec/g, "")) : b.indexOf("min") > 0 ? (b = b.replace(/\smin/g, ""), a = b.split(":"), s = Number(60 * a[0]) + Number(a[1])) : b.match(/\d{1,2}:\d{2}:\d{2}/) && (a = b.split(":"), s = Number(3600 * a[0]) + Number(60 * a[1]) + Number(a[2])), m();
+    });
+  }function g() {
+    return Math.round(new Date().getTime() / 1e3);
+  }function h(a) {
+    var b,
+        c = 0,
+        d = Math.floor(a / 60);return (a >= 3600 && (c = Math.floor(a / 3600)), a >= 3600 && (d = Math.floor(a % 3600 / 60)), 10 > d && c > 0 && (d = "0" + d), b = a % 60, 10 > b && (d > 0 || c > 0) && (b = "0" + b), { hours: c, minutes: d, seconds: b });
+  }function i(a) {
+    var b = "",
+        c = h(a);if (v.format) {
+      var d = [{ identifier: "%h", value: c.hours, pad: !1 }, { identifier: "%m", value: c.minutes, pad: !1 }, { identifier: "%s", value: c.seconds, pad: !1 }, { identifier: "%H", value: parseInt(c.hours), pad: !0 }, { identifier: "%M", value: parseInt(c.minutes), pad: !0 }, { identifier: "%S", value: parseInt(c.seconds), pad: !0 }];b = v.format, d.forEach(function (a) {
+        b = b.replace(new RegExp(a.identifier.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), "g"), a.pad && a.value < 10 ? "0" + a.value : a.value);
+      });
+    } else b = c.hours ? c.hours + ":" + c.minutes + ":" + c.seconds : c.minutes ? c.minutes + ":" + c.seconds + " min" : c.seconds + " sec";return b;
+  }function j(a) {
+    if (!isNaN(Number(a))) return a;var b = a.match(/\d{1,2}h/),
+        c = a.match(/\d{1,2}m/),
+        d = a.match(/\d{1,2}s/),
+        e = 0;return (a = a.toLowerCase(), b && (e += 3600 * Number(b[0].replace("h", ""))), c && (e += 60 * Number(c[0].replace("m", ""))), d && (e += Number(d[0].replace("s", ""))), e);
+  }function k() {
+    t || (e(), b(), r.data("state", y));
+  }function l() {
+    t && (c(), r.data("state", z));
+  }function m() {
+    t || (q = g() - s, b(), r.data("state", y));
+  }function n() {
+    q = g(), s = 0, r.data("seconds", s), r.data("state", x), u = v.duration;
+  }function o() {
+    c(), r.data("plugin_" + B, null), r.data("seconds", null), r.data("state", null), r[w]("");
+  }var p,
+      q,
+      r,
+      s = 0,
+      t = !1,
+      u = null,
+      v = { seconds: 0, editable: !1, restart: !1, duration: null, callback: function callback() {
+      alert("Time up!"), c();
+    }, repeat: !1, countdown: !1, format: null, updateFrequency: 500 },
+      w = "html",
+      x = "stopped",
+      y = "running",
+      z = "paused",
+      A = function A(b, c) {
+    var d;v = a.extend(v, c), r = a(b), s = v.seconds, q = g() - s, r.data("seconds", s), r.data("state", x), d = r.prop("tagName").toLowerCase(), ("input" === d || "textarea" === d) && (w = "val"), v.duration && (u = v.duration = j(v.duration), s >= u && (u = s + u)), v.editable && f();
+  };A.prototype = { start: function start() {
+      k();
+    }, pause: function pause() {
+      l();
+    }, resume: function resume() {
+      m();
+    }, reset: function reset() {
+      n();
+    }, remove: function remove() {
+      o();
+    } };var B = "timer";a.fn[B] = function (b) {
+    return (b = b || "start", this.each(function () {
+      a.data(this, "plugin_" + B) instanceof A || a.data(this, "plugin_" + B, new A(this, b));var c = a.data(this, "plugin_" + B);"string" == typeof b && "function" == typeof c[b] && c[b].call(c), "object" == typeof b && c.start.call(c);
+    }));
+  };
+})(jQuery);
+
+},{}],3:[function(require,module,exports){
 /**
  * @license AngularJS v1.4.1
  * (c) 2010-2015 Google, Inc. http://angularjs.org
@@ -28408,11 +28495,11 @@ var minlengthDirective = function() {
 })(window, document);
 
 !window.angular.$$csp() && window.angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 require('./angular');
 module.exports = angular;
 
-},{"./angular":2}],4:[function(require,module,exports){
+},{"./angular":3}],5:[function(require,module,exports){
 (function (global){
 ; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 /*
@@ -34813,7 +34900,7 @@ module.exports = angular;
 }).call(global, undefined, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function (global){
 ; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 /*!

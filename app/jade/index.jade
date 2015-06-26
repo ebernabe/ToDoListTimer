@@ -24,7 +24,8 @@ block content
 		article.todo-current(ng-repeat="t in tdc.currentt")
 			a.large.button.split.success.expand(ng-click="tdc.stoptask(t)") 
 				b.client(ng-if="t.client") {{t.client}} - 
-				|{{t.name}}		
+				|{{t.name}}	<div id="timer{{t.id}}">00:00</div>
+
 				span(data-dropdown="drop")
 
 			ul(id="drop",class="f-dropdown",data-dropdown-content)

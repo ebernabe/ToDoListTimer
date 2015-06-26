@@ -2,10 +2,11 @@
 var angular = require("angular");
 
 var $ = require('jquery');
+var timer = require("./timer.js");
+
 var foundation = require('foundation');
 
 $(document).foundation();
-
 
 // Production steps of ECMA-262, Edition 5, 15.4.4.14
 // Reference: http://es5.github.io/#x15.4.4.14
@@ -85,9 +86,7 @@ module.exports = angular.module("ToDoApp",[])
     this.tasks = [];
     this.currentt = [];
     this.todo = [];
-    this.clients = [{id:1,name:"PCR"},{id:2,"name":"Amerisol"}]
-
- 
+    this.clients = [{id:1,name:"PCR"},{id:2,"name":"Amerisol"}];
 
 
     this.addtodo = function(){
@@ -102,8 +101,7 @@ module.exports = angular.module("ToDoApp",[])
     };   
     this.starttask = function(t){
         if(this.currentt.indexOf(t)===-1){
-    	   this.currentt.push(t);
-         
+    	     this.currentt.push(t);
         }else{
             console.log("Exist");
         }
@@ -111,15 +109,21 @@ module.exports = angular.module("ToDoApp",[])
       //console.log(this.currentt.indexOf(t));
 
     };
-
+    this.startwatch = function(timer){
+              $("#timer"+timer).timer({
+                  action: 'start',
+                  seconds: 0
+                });
+              // debugger
+    };
     this.stoptask = function(t){
-             console.log(t);
+             
              if(this.currentt.indexOf(t)>-1){
                        this.currentt.splice(this.currentt.indexOf(t),1);
                     }else{
                         console.log("Do not Exist");
                     }
-    }
+    };
 
 
 
