@@ -11,7 +11,7 @@ block content
 				div.large-6.medium-6.columns
 					input(type="text",class="left  radius large-6 medium-6 columns",ng-model="tdc.todo.name",placeholder="ToDo")
 				div.large-4.medium-4.columns
-					select(ng-model="tdc.todo.client" ng-options="item.name as item.name for item in tdc.clients")
+					select(ng-model="tdc.todo.client", ng-options="item.name as item.name for item in tdc.clients")
 						option(value="") Select Client
 				input(class="button right small large-2 medium-2 columns  alert",type="submit",value="Add")
 
@@ -22,26 +22,29 @@ block content
 
 	section.todo-current-section
 		article.todo-current(ng-repeat="t in tdc.currentt")
-			a.large.button.split.success.expand(ng-click="tdc.stoptask(t)") 
-				b.client(ng-if="t.client") {{t.client}} - 
-				|{{t.name}}	<div id="timer{{t.id}}">00:00</div>
-
+			div.large.button.split.success.expand
+				div.todo-current-name(ng-click="tdc.stoptask(t)")
+					b.client(ng-if="t.client") {{t.client}} - 
+					|{{t.name}} - {{t.time}}
+					div(id="timer{{t.id}}") 00:00
+					
 				span(data-dropdown="drop")
 
 			ul(id="drop",class="f-dropdown",data-dropdown-content)
 				li 
-					a(href="#") Desactivar
+					a(href="javascript:;",ng-click="tdc.stoptask(t)") stop
 				li 
 					a(href="#") Concluido
 				li
 					a(href="#") Terminado
 				li
 					a(href="#") Descartado 
+	
 	section.todo-tasks-section
 		article.row.todo-tasks(ng-repeat="t in tdc.tasks")
-			div.todo-option-task.large-10.columns
-				span.client(ng-if="t.client") {{t.client}} - 
+			span.todo-option-task.large-10.medium-8.small-6.columns
+				span.todo-tasks-client(ng-if="t.client") {{t.client}} - 
 				|{{t.name}} 
-				span [{{t.date|date:"medium"}}]
-			div.large-2.columns
-				input(class="button tiny right ",type="submit",ng-click="tdc.starttask(t)",value="Start Task")
+				span.todo-tasks-date [{{t.date|date:"shortDate"}}]
+			
+			button.large-2.medium-4.small-4.columns(id="s{{t.id}}",class="button tiny right ",type="submit",ng-click="tdc.starttask(t)") Start

@@ -18,10 +18,7 @@
     "angular": "~1.4.1",
     "jquery": "~2.1.4",
     "browserify-shim": "~3.8.9",
-    "foundation-sites": "~5.5.2",
-    "angular-timer": "~1.2.0",
-    "humanize-duration": "~3.1.0",
-    "moment": "~2.10.3"
+    "foundation-sites": "~5.5.2"
   },
   "devDependencies": {
     "http-server": "~0.8.0",

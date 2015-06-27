@@ -2,9 +2,11 @@
 var angular = require("angular");
 
 var $ = require('jquery');
+
 var timer = require("./timer.js");
 
 var foundation = require('foundation');
+
 
 $(document).foundation();
 
@@ -78,44 +80,52 @@ function dnow() {
   return (Math.round((new Date()).getTime() / 1000));         
  
 }
- 
-
 
 module.exports = angular.module("ToDoApp",[])
 .controller("ToDoController",function () {
+    
     this.tasks = [];
     this.currentt = [];
     this.todo = [];
     this.clients = [{id:1,name:"PCR"},{id:2,"name":"Amerisol"}];
 
-
     this.addtodo = function(){
     	var s = String(dnow());
       var namex = this.todo.name;
       var clientx = this.todo.client; 
-      if(namex.length > 0){ 
-            	this.tasks.push({id:s,name: namex, date:new Date(),client:clientx});
-            	this.todo.name = "";
-              this.todo.client = "";
-        }
-    };   
+      if(!(namex===undefined))
+        if(namex.length > 0){ 
+              	this.tasks.push({id:s,name: namex, date:new Date(),client:clientx,});
+              	this.todo.name = "";
+                this.todo.client = "";
+          }
+    }; 
+
+    this.startwatch = function(timerx,t){
+      setTimeout(function(){
+                        $("#timer"+timerx).timer({
+                                  action: 'start',
+                                  seconds: 0,
+                                  format: '%H:%M:%S'
+                        });
+                },1000);
+             
+              // console.log("#timer"+timerx);
+              
+               
+    };
     this.starttask = function(t){
         if(this.currentt.indexOf(t)===-1){
     	     this.currentt.push(t);
+           this.startwatch(t.id,t);
         }else{
             console.log("Exist");
         }
    		
-      //console.log(this.currentt.indexOf(t));
+      
 
     };
-    this.startwatch = function(timer){
-              $("#timer"+timer).timer({
-                  action: 'start',
-                  seconds: 0
-                });
-              // debugger
-    };
+    
     this.stoptask = function(t){
              
              if(this.currentt.indexOf(t)>-1){
@@ -128,5 +138,4 @@ module.exports = angular.module("ToDoApp",[])
 
 
   });
-
 

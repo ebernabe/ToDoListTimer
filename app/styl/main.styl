@@ -17,33 +17,42 @@ h1
 		font-size 20px
 	&-tasks-section
 		display block
-		width 80%
+		width 90%
 		margin 0 auto
-		overflow hidden
+		 
 		word-wrap: break-word;
 		text-align left
 	&-current
 		display block
-		width 62%
+		width 80%
 		margin 0 auto
+		&-name
+			overflow ellipsis
 		a 
 			overflow ellipsis
 	&-tasks
-		width 80%
+		width 90%
 		display block
 		margin 0 auto
 		text-align left
+		height auto
 		vertical-align middle
 		padding 5px
-		margin-bottom 5px
-		background-color #F8F8F8 
+		margin-top 5px
+		background-color #F8F8F8
+		&-date
+			font-size 9px
 		// border-bottom 1px solid grisclaro	
-		div
+		span
 			vertical-align middle
-		input
-			vertical-align middle
+			overflow ellipsis
+			padding 5px
+		button
+			margin 0px
+		
 	&-option-task
 		font-size 12px
+		
 	&-notice
 		display block
 		text-align center
