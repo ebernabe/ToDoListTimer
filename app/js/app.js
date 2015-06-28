@@ -3,11 +3,12 @@ var angular = require("angular");
 
 var $ = require('jquery');
 
-var timer = require("./timer.js");
+// var timer = require("./timer.js");
 
 var foundation = require('foundation');
-
-
+var cachecurrent = [];
+var setintervaljs;
+var idcurrenttask;
 $(document).foundation();
 
 // Production steps of ECMA-262, Edition 5, 15.4.4.14
@@ -81,9 +82,8 @@ function dnow() {
  
 }
 
-module.exports = angular.module("ToDoApp",[])
+module.exports = angular.module("ToDoApp",["filters"])
 .controller("ToDoController",function () {
-    
     this.tasks = [];
     this.currentt = [];
     this.todo = [];
@@ -95,29 +95,59 @@ module.exports = angular.module("ToDoApp",[])
       var clientx = this.todo.client; 
       if(!(namex===undefined))
         if(namex.length > 0){ 
-              	this.tasks.push({id:s,name: namex, date:new Date(),client:clientx,});
+              	this.tasks.push({id:s,name: namex, date:new Date(),client:clientx,time:0 });
               	this.todo.name = "";
                 this.todo.client = "";
           }
     }; 
 
-    this.startwatch = function(timerx,t){
-      setTimeout(function(){
-                        $("#timer"+timerx).timer({
-                                  action: 'start',
-                                  seconds: 0,
-                                  format: '%H:%M:%S'
-                        });
-                },1000);
-             
-              // console.log("#timer"+timerx);
-              
-               
+    this.startwatch = function(idctask,currenttasks){
+          idcurrenttask = idctask;
+          cachecurrent = currenttasks;
+          if(setintervaljs) {
+            clearInterval(setintervaljs);
+          }  
+            setintervaljs = setInterval(function(){ 
+                  var c =0;
+                  var d = new Date();
+                  var calculo;
+                  var dini;
+                   ;
+                  for (var key in cachecurrent){
+
+                      d = new Date();
+                      if (idcurrenttask===cachecurrent[key].id){
+                        dini = new Date();
+                        $("#d"+cachecurrent[key].id).val(dini);
+                      }else{
+                        dini = new Date($("#d"+cachecurrent[key].id).val());
+                      }
+
+                      calculo = Math.floor((d - dini)/1000);
+                      //cachecurrent[key].time = calculo;
+                      $("#i"+cachecurrent[key].id).val(cachecurrent[key].time+calculo);
+
+
+
+
+                      $("#timer"+cachecurrent[key].id).html(setTheTimer(cachecurrent[key].time+calculo));
+                      // this.tasks[this.tasks.indexOf(cachecurrent[key])].time = cachecurrent[key].time+calculo;
+                      // angular.element(document.getElementById('mainController')).scope().tdc.tasks[angular.element(document.getElementById('mainController')).scope().tdc.tasks.indexOf(cachecurrent[key])].time = cachecurrent[key].time+calculo;
+
+
+
+                        console.log(cachecurrent[key].time+calculo);
+                        idcurrenttask = "";
+                  }
+                  
+            },1000);
+                // debugger 
+
     };
     this.starttask = function(t){
         if(this.currentt.indexOf(t)===-1){
     	     this.currentt.push(t);
-           this.startwatch(t.id,t);
+           this.startwatch(t.id,this.currentt);
         }else{
             console.log("Exist");
         }
@@ -127,9 +157,19 @@ module.exports = angular.module("ToDoApp",[])
     };
     
     this.stoptask = function(t){
-             
              if(this.currentt.indexOf(t)>-1){
+                      
                        this.currentt.splice(this.currentt.indexOf(t),1);
+
+                       if(cachecurrent.indexOf(t)>-1){
+                        this.cachecurrent.splice(this.cachecurrent.indexOf(t),1);
+
+                       }
+                       this.tasks[this.tasks.indexOf(t)].time = parseInt($("#i"+t.id).val(),10);
+                       
+                          // if(setintervaljs) {
+                          //   clearInterval(setintervaljs);
+                          // }  
                     }else{
                         console.log("Do not Exist");
                     }
@@ -139,3 +179,27 @@ module.exports = angular.module("ToDoApp",[])
 
   });
 
+
+angular.module('filters', [])
+.filter('totime', function () {
+      return function (input) {
+         return setTheTimer(input);
+          };
+    });
+
+function setTheTimer(input){
+
+ if (!input) return "";
+          var res = parseInt(input,10);
+
+          
+          
+          var min = Math.floor(Math.floor((res - (Math.floor(res/3600)*3600))/60));
+          var h = Math.floor((res)/3600);
+          var seg = Math.floor((res - (min*60))-(h*3600));
+
+
+          var textres = h+"h:"+min+"m:"+seg+"s";
+          console.log(textres);
+          return textres;
+}

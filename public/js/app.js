@@ -4,10 +4,12 @@ var angular = require('angular');
 
 var $ = require('jquery');
 
-var timer = require('./timer.js');
+// var timer = require("./timer.js");
 
 var foundation = require('foundation');
-
+var cachecurrent = [];
+var setintervaljs;
+var idcurrenttask;
 $(document).foundation();
 
 // Production steps of ECMA-262, Edition 5, 15.4.4.14
@@ -80,8 +82,7 @@ function dnow() {
   return Math.round(new Date().getTime() / 1000);
 }
 
-module.exports = angular.module('ToDoApp', []).controller('ToDoController', function () {
-
+module.exports = angular.module('ToDoApp', ['filters']).controller('ToDoController', function () {
   this.tasks = [];
   this.currentt = [];
   this.todo = [];
@@ -92,122 +93,97 @@ module.exports = angular.module('ToDoApp', []).controller('ToDoController', func
     var namex = this.todo.name;
     var clientx = this.todo.client;
     if (!(namex === undefined)) if (namex.length > 0) {
-      this.tasks.push({ id: s, name: namex, date: new Date(), client: clientx });
+      this.tasks.push({ id: s, name: namex, date: new Date(), client: clientx, time: 0 });
       this.todo.name = '';
       this.todo.client = '';
     }
   };
 
-  this.startwatch = function (timerx, t) {
-    setTimeout(function () {
-      $('#timer' + timerx).timer({
-        action: 'start',
-        seconds: 0,
-        format: '%H:%M:%S'
-      });
-    }, 1000);
+  this.startwatch = function (idctask, currenttasks) {
+    idcurrenttask = idctask;
+    cachecurrent = currenttasks;
+    if (setintervaljs) {
+      clearInterval(setintervaljs);
+    }
+    setintervaljs = setInterval(function () {
+      var c = 0;
+      var d = new Date();
+      var calculo;
+      var dini;
+      ;
+      for (var key in cachecurrent) {
 
-    // console.log("#timer"+timerx);
+        d = new Date();
+        if (idcurrenttask === cachecurrent[key].id) {
+          dini = new Date();
+          $('#d' + cachecurrent[key].id).val(dini);
+        } else {
+          dini = new Date($('#d' + cachecurrent[key].id).val());
+        }
+
+        calculo = Math.floor((d - dini) / 1000);
+        //cachecurrent[key].time = calculo;
+        $('#i' + cachecurrent[key].id).val(cachecurrent[key].time + calculo);
+
+        $('#timer' + cachecurrent[key].id).html(setTheTimer(cachecurrent[key].time + calculo));
+        // this.tasks[this.tasks.indexOf(cachecurrent[key])].time = cachecurrent[key].time+calculo;
+        // angular.element(document.getElementById('mainController')).scope().tdc.tasks[angular.element(document.getElementById('mainController')).scope().tdc.tasks.indexOf(cachecurrent[key])].time = cachecurrent[key].time+calculo;
+
+        console.log(cachecurrent[key].time + calculo);
+        idcurrenttask = '';
+      }
+    }, 1000);
+    // debugger
   };
   this.starttask = function (t) {
     if (this.currentt.indexOf(t) === -1) {
       this.currentt.push(t);
-      this.startwatch(t.id, t);
+      this.startwatch(t.id, this.currentt);
     } else {
       console.log('Exist');
     }
   };
 
   this.stoptask = function (t) {
-
     if (this.currentt.indexOf(t) > -1) {
+
       this.currentt.splice(this.currentt.indexOf(t), 1);
+
+      if (cachecurrent.indexOf(t) > -1) {
+        this.cachecurrent.splice(this.cachecurrent.indexOf(t), 1);
+      }
+      this.tasks[this.tasks.indexOf(t)].time = parseInt($('#i' + t.id).val(), 10);
+
+      // if(setintervaljs) {
+      //   clearInterval(setintervaljs);
+      // }
     } else {
       console.log('Do not Exist');
     }
   };
 });
 
-},{"./timer.js":2,"angular":4,"foundation":5,"jquery":6}],2:[function(require,module,exports){
-/*! timer.jquery 0.4.1 2015-06-16*/"use strict";
-
-!(function (a) {
-  function b() {
-    p = setInterval(d, v.updateFrequency), t = !0;
-  }function c() {
-    clearInterval(p), t = !1;
-  }function d() {
-    s = g() - q, e(), u && s === u && (v.callback(), v.repeat && (u += v.duration), v.countdown && (v.countdown = !1));
-  }function e() {
-    var a = s;v.countdown && u > 0 && (a = u - s), r[w](i(a)), r.data("seconds", a);
-  }function f() {
-    r.on("focus", function () {
-      l();
-    }), r.on("blur", function () {
-      var a,
-          b = r[w]();b.indexOf("sec") > 0 ? s = Number(b.replace(/\ssec/g, "")) : b.indexOf("min") > 0 ? (b = b.replace(/\smin/g, ""), a = b.split(":"), s = Number(60 * a[0]) + Number(a[1])) : b.match(/\d{1,2}:\d{2}:\d{2}/) && (a = b.split(":"), s = Number(3600 * a[0]) + Number(60 * a[1]) + Number(a[2])), m();
-    });
-  }function g() {
-    return Math.round(new Date().getTime() / 1e3);
-  }function h(a) {
-    var b,
-        c = 0,
-        d = Math.floor(a / 60);return (a >= 3600 && (c = Math.floor(a / 3600)), a >= 3600 && (d = Math.floor(a % 3600 / 60)), 10 > d && c > 0 && (d = "0" + d), b = a % 60, 10 > b && (d > 0 || c > 0) && (b = "0" + b), { hours: c, minutes: d, seconds: b });
-  }function i(a) {
-    var b = "",
-        c = h(a);if (v.format) {
-      var d = [{ identifier: "%h", value: c.hours, pad: !1 }, { identifier: "%m", value: c.minutes, pad: !1 }, { identifier: "%s", value: c.seconds, pad: !1 }, { identifier: "%H", value: parseInt(c.hours), pad: !0 }, { identifier: "%M", value: parseInt(c.minutes), pad: !0 }, { identifier: "%S", value: parseInt(c.seconds), pad: !0 }];b = v.format, d.forEach(function (a) {
-        b = b.replace(new RegExp(a.identifier.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), "g"), a.pad && a.value < 10 ? "0" + a.value : a.value);
-      });
-    } else b = c.hours ? c.hours + ":" + c.minutes + ":" + c.seconds : c.minutes ? c.minutes + ":" + c.seconds + " min" : c.seconds + " sec";return b;
-  }function j(a) {
-    if (!isNaN(Number(a))) return a;var b = a.match(/\d{1,2}h/),
-        c = a.match(/\d{1,2}m/),
-        d = a.match(/\d{1,2}s/),
-        e = 0;return (a = a.toLowerCase(), b && (e += 3600 * Number(b[0].replace("h", ""))), c && (e += 60 * Number(c[0].replace("m", ""))), d && (e += Number(d[0].replace("s", ""))), e);
-  }function k() {
-    t || (e(), b(), r.data("state", y));
-  }function l() {
-    t && (c(), r.data("state", z));
-  }function m() {
-    t || (q = g() - s, b(), r.data("state", y));
-  }function n() {
-    q = g(), s = 0, r.data("seconds", s), r.data("state", x), u = v.duration;
-  }function o() {
-    c(), r.data("plugin_" + B, null), r.data("seconds", null), r.data("state", null), r[w]("");
-  }var p,
-      q,
-      r,
-      s = 0,
-      t = !1,
-      u = null,
-      v = { seconds: 0, editable: !1, restart: !1, duration: null, callback: function callback() {
-      alert("Time up!"), c();
-    }, repeat: !1, countdown: !1, format: null, updateFrequency: 500 },
-      w = "html",
-      x = "stopped",
-      y = "running",
-      z = "paused",
-      A = function A(b, c) {
-    var d;v = a.extend(v, c), r = a(b), s = v.seconds, q = g() - s, r.data("seconds", s), r.data("state", x), d = r.prop("tagName").toLowerCase(), ("input" === d || "textarea" === d) && (w = "val"), v.duration && (u = v.duration = j(v.duration), s >= u && (u = s + u)), v.editable && f();
-  };A.prototype = { start: function start() {
-      k();
-    }, pause: function pause() {
-      l();
-    }, resume: function resume() {
-      m();
-    }, reset: function reset() {
-      n();
-    }, remove: function remove() {
-      o();
-    } };var B = "timer";a.fn[B] = function (b) {
-    return (b = b || "start", this.each(function () {
-      a.data(this, "plugin_" + B) instanceof A || a.data(this, "plugin_" + B, new A(this, b));var c = a.data(this, "plugin_" + B);"string" == typeof b && "function" == typeof c[b] && c[b].call(c), "object" == typeof b && c.start.call(c);
-    }));
+angular.module('filters', []).filter('totime', function () {
+  return function (input) {
+    return setTheTimer(input);
   };
-})(jQuery);
+});
 
-},{}],3:[function(require,module,exports){
+function setTheTimer(input) {
+
+  if (!input) return '';
+  var res = parseInt(input, 10);
+
+  var min = Math.floor(Math.floor((res - Math.floor(res / 3600) * 3600) / 60));
+  var h = Math.floor(res / 3600);
+  var seg = Math.floor(res - min * 60 - h * 3600);
+
+  var textres = h + 'h:' + min + 'm:' + seg + 's';
+  console.log(textres);
+  return textres;
+}
+
+},{"angular":3,"foundation":4,"jquery":5}],2:[function(require,module,exports){
 /**
  * @license AngularJS v1.4.1
  * (c) 2010-2015 Google, Inc. http://angularjs.org
@@ -28502,11 +28478,11 @@ var minlengthDirective = function() {
 })(window, document);
 
 !window.angular.$$csp() && window.angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 require('./angular');
 module.exports = angular;
 
-},{"./angular":3}],5:[function(require,module,exports){
+},{"./angular":2}],4:[function(require,module,exports){
 (function (global){
 ; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 /*
@@ -34907,7 +34883,7 @@ module.exports = angular;
 }).call(global, undefined, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (global){
 ; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 /*!
