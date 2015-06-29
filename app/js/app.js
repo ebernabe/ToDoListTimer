@@ -2,13 +2,11 @@
 var angular = require("angular");
 
 var $ = require('jquery');
-
-// var timer = require("./timer.js");
-
 var foundation = require('foundation');
 var cachecurrent = [];
 var setintervaljs;
 var idcurrenttask;
+
 $(document).foundation();
 
 // Production steps of ECMA-262, Edition 5, 15.4.4.14
