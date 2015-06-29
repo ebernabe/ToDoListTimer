@@ -93,7 +93,7 @@ module.exports = angular.module("ToDoApp",["filters"])
     this.tasks = [];
     this.currentt = [];
     this.todo = [];
-    this.clients = [{id:1,name:"PCR"},{id:2,"name":"Amerisol"}];
+    this.clients = [{id:1,name:"Client#1"},{id:2,"name":"Client#2"},{id:3,"name":"Client#3"}];
 
     $scope.$on('onRepeatLast', function(scope, element, attrs){
           $scope.tdc.startwatch($scope);
