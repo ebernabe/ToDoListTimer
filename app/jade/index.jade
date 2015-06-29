@@ -21,14 +21,14 @@ block content
 			|and track the time
 
 	section.todo-current-section
-		article.todo-current(ng-repeat="t in tdc.currentt")
+		article.todo-current(ng-repeat="t in tdc.currentt",on-last-repeat)
 			div.large.button.split.success.expand
 				div.todo-current-name(ng-click="tdc.stoptask(t)")
 					b.client(ng-if="t.client") {{t.client}} - 
 					|{{t.name}}
 					input(type="hidden",id="i{{t.id}}",value="{{t.time}}")
 					input(type="hidden",id="d{{t.id}}",value='{{t.date|date:"medium"}}')
-					div(id="timer{{t.id}}") {{t.time|totime}}
+					div(id="timer{{t.id}}"){{t.time|totime}}
 					
 				span(data-dropdown="drop")
 

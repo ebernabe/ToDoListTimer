@@ -83,11 +83,23 @@ function dnow() {
 }
 
 module.exports = angular.module("ToDoApp",["filters"])
-.controller("ToDoController",function () {
+.directive('onLastRepeat', function() {
+        return function(scope, element, attrs) {
+             
+            if (scope.$last) setTimeout(function(){
+                scope.$emit('onRepeatLast', element, attrs);
+            }, 1);
+        };
+    })
+.controller("ToDoController",function ($scope) {
     this.tasks = [];
     this.currentt = [];
     this.todo = [];
     this.clients = [{id:1,name:"PCR"},{id:2,"name":"Amerisol"}];
+
+    $scope.$on('onRepeatLast', function(scope, element, attrs){
+          $scope.tdc.startwatch($scope);
+      });
 
     this.addtodo = function(){
     	var s = String(dnow());
@@ -95,59 +107,69 @@ module.exports = angular.module("ToDoApp",["filters"])
       var clientx = this.todo.client; 
       if(!(namex===undefined))
         if(namex.length > 0){ 
-              	this.tasks.push({id:s,name: namex, date:new Date(),client:clientx,time:0 });
+              	this.tasks.push({id:s,name: namex, date:new Date(),client:clientx,time:0, lastDate:"" });
               	this.todo.name = "";
                 this.todo.client = "";
           }
     }; 
 
-    this.startwatch = function(idctask,currenttasks){
-          idcurrenttask = idctask;
-          cachecurrent = currenttasks;
+    this.startwatch = function($scope){
+          
+    
           if(setintervaljs) {
             clearInterval(setintervaljs);
           }  
-            setintervaljs = setInterval(function(){ 
+           
+
                   var c =0;
                   var d = new Date();
                   var calculo;
                   var dini;
-                   ;
-                  for (var key in cachecurrent){
+                   
+                  for (var key in $scope.tdc.currentt){
+                      //   console.log(key);
+                      //   console.log($scope.tdc.currentt[key]);
+                      // d = new Date();
+                      //   if (""===$scope.tdc.currentt[key].lastDate){
+                      //     dini = new Date();
+                      //     $scope.tdc.currentt[key].lastDate = dini;
+                      //   }else{
+                      //     dini = $scope.tdc.currentt[key].lastDate;
+                      //   }
 
-                      d = new Date();
-                      if (idcurrenttask===cachecurrent[key].id){
-                        dini = new Date();
-                        $("#d"+cachecurrent[key].id).val(dini);
-                      }else{
-                        dini = new Date($("#d"+cachecurrent[key].id).val());
-                      }
+                      // calculo = Math.floor((d - dini)/1000);
+                    
+                      $("#i"+$scope.tdc.currentt[key].id).val($scope.tdc.currentt[key].time);
 
-                      calculo = Math.floor((d - dini)/1000);
-                      //cachecurrent[key].time = calculo;
-                      $("#i"+cachecurrent[key].id).val(cachecurrent[key].time+calculo);
+                      // $("#timer"+cachecurrent[key].id).html(setTheTimer(cachecurrent[key].time+calculo));
+                     $scope.tdc.currentt[key].time = $scope.tdc.currentt[key].time;
+                     
 
-
-
-
-                      $("#timer"+cachecurrent[key].id).html(setTheTimer(cachecurrent[key].time+calculo));
-                      // this.tasks[this.tasks.indexOf(cachecurrent[key])].time = cachecurrent[key].time+calculo;
-                      // angular.element(document.getElementById('mainController')).scope().tdc.tasks[angular.element(document.getElementById('mainController')).scope().tdc.tasks.indexOf(cachecurrent[key])].time = cachecurrent[key].time+calculo;
-
-
-
-                        console.log(cachecurrent[key].time+calculo);
-                        idcurrenttask = "";
                   }
-                  
-            },1000);
-                // debugger 
 
+
+            setintervaljs = setInterval(function(){
+                for (var key in $scope.tdc.currentt){
+                  // d = new Date();
+                  // dini = $scope.tdc.currentt[key].lastDate;
+                  //  calculo = Math.floor((d - dini)/1000);
+                  $("#i"+$scope.tdc.currentt[key].id).val($scope.tdc.currentt[key].time);
+                  $scope.tdc.currentt[key].time = $scope.tdc.currentt[key].time+1;
+                  $("#timer"+ $scope.tdc.currentt[key].id).html(setTheTimer($scope.tdc.currentt[key].time));
+                  // console.log(key);
+
+                }
+
+            },1000);
+                  
+                  
+           
+               
     };
     this.starttask = function(t){
         if(this.currentt.indexOf(t)===-1){
     	     this.currentt.push(t);
-           this.startwatch(t.id,this.currentt);
+           
         }else{
             console.log("Exist");
         }
@@ -157,19 +179,14 @@ module.exports = angular.module("ToDoApp",["filters"])
     };
     
     this.stoptask = function(t){
-             if(this.currentt.indexOf(t)>-1){
-                      
-                       this.currentt.splice(this.currentt.indexOf(t),1);
-
-                       if(cachecurrent.indexOf(t)>-1){
-                        this.cachecurrent.splice(this.cachecurrent.indexOf(t),1);
-
-                       }
-                       this.tasks[this.tasks.indexOf(t)].time = parseInt($("#i"+t.id).val(),10);
-                       
-                          // if(setintervaljs) {
-                          //   clearInterval(setintervaljs);
-                          // }  
+       var keyc = -1;
+             if(this.currentt.indexOf(t)>-1){ 
+                        
+                        
+                      this.tasks[this.tasks.indexOf(t)].lastDate ="";
+                      this.tasks[this.tasks.indexOf(t)].time = t.time; 
+                      this.currentt.splice(this.currentt.indexOf(t),1);
+                          
                     }else{
                         console.log("Do not Exist");
                     }
@@ -178,7 +195,6 @@ module.exports = angular.module("ToDoApp",["filters"])
 
 
   });
-
 
 angular.module('filters', [])
 .filter('totime', function () {
@@ -190,16 +206,13 @@ angular.module('filters', [])
 function setTheTimer(input){
 
  if (!input) return "";
-          var res = parseInt(input,10);
-
-          
-          
+          var res = parseInt(input,10); 
           var min = Math.floor(Math.floor((res - (Math.floor(res/3600)*3600))/60));
           var h = Math.floor((res)/3600);
           var seg = Math.floor((res - (min*60))-(h*3600));
 
 
           var textres = h+"h:"+min+"m:"+seg+"s";
-          console.log(textres);
+          //console.log(textres);
           return textres;
 }
