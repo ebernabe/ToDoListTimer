@@ -149,6 +149,7 @@ module.exports = angular.module('ToDoApp', ['filters']).directive('onLastRepeat'
         $scope.tdc.currentt[key].time = $scope.tdc.currentt[key].time + 1;
         $('#timer' + $scope.tdc.currentt[key].id).html(setTheTimer($scope.tdc.currentt[key].time));
         // console.log(key);
+        // $scope.tdc.tasks[$scope.tdc.tasks.indexOf($scope.tdc.currentt[key])].time = $scope.tdc.currentt[key].time;
       }
     }, 1000);
   };
@@ -160,10 +161,24 @@ module.exports = angular.module('ToDoApp', ['filters']).directive('onLastRepeat'
     }
   };
 
+  this.deletetask = function (t) {
+    if (this.currentt.indexOf(t) > -1) {
+
+      this.currentt.splice(this.currentt.indexOf(t), 1);
+    } else {
+      console.log('Do not Exist Current Task');
+    }
+    if (this.tasks.indexOf(t) > -1) {
+
+      this.tasks.splice(this.tasks.indexOf(t), 1);
+    } else {
+      console.log('Do not Exist Task');
+    }
+  };
+
   this.stoptask = function (t) {
     var keyc = -1;
     if (this.currentt.indexOf(t) > -1) {
-
       this.tasks[this.tasks.indexOf(t)].lastDate = '';
       this.tasks[this.tasks.indexOf(t)].time = t.time;
       this.currentt.splice(this.currentt.indexOf(t), 1);
